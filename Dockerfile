@@ -1,5 +1,4 @@
-FROM tensorflow/tensorflow:2.19.0
-
+FROM tensorflow/tensorflow:2.9.1
 RUN apt-get update && apt-get install -y git unzip wget curl
 RUN pip3 install --upgrade pip cmake
 WORKDIR scDrug
@@ -40,9 +39,18 @@ RUN sed -i 's/import tensorflow as tf/import tensorflow.compat.v1 as tf\ntf.disa
 RUN sed -i 's/import tensorflow\.python\.util\.deprecation as deprecation/from tensorflow.python.util import deprecation/g' /opt/CaDRReS-Sc/cadrres_sc/model.py
 
 ## CIBERSORTx
-RUN curl -fsSL https://get.docker.com -o get-docker.sh
-RUN sh get-docker.sh
+RUN apt-get update -y
+RUN apt-get install -y ca-certificates curl
+RUN install -m 0755 -d /etc/apt/keyrings
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+RUN chmod a+r /etc/apt/keyrings/docker.asc
+
+RUN echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt-get update -y
+
+RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 CMD [ "/bin/bash" ]
-
-

@@ -4,12 +4,11 @@ The scDrug constructed a workflow for comprehensive analysis on single-cell RNA 
 
 The scDrug went through three parts on raw scRNA-seq data investigation: **Single-Cell Data Analysis**, **Drug Response Prediction**, and **Treatment Selection**.
 
-- **Single-Cell Data Analysis** performed data preprocessing, clustering, cell type annotation, Gene Set Enrichment Analysis (GSEA), and survival analysis. 
+- **Single-Cell Data Analysis** performed data preprocessing, clustering, cell type annotation, Gene Set Enrichment Analysis (GSEA), and survival analysis.
 
 - **Drug Response Prediction** estimated the half maximal inhibitory concentration (IC50) of cell clusters, and reported the cell death percentages as drug kill efficacy.
 
 - **Treatment Selection** listed treatment combinations of given cell clusters.
-
 
 ## Download and Installation
 
@@ -19,28 +18,25 @@ The scDrug went through three parts on raw scRNA-seq data investigation: **Singl
     git clone https://github.com/ailabstw/scDrug.git ./scDrug
     ```
 
-
 2.  Build the Docker image tagged `sc-drug`.
 
     ```
     docker build -t sc-drug ./scDrug
     ```
 
-
 3.  Run the Docker container named `scDrug` with `/docker/path` mounted to `/server/path` to access files within the Docker container.
-    
+
     ```
-    docker run -it --name scDrug -v /server/path:/docker/path --privileged sc-drug
+    docker run -it --name scDrug -v /server/path:/docker/path --privileged --ulimit nofile=65535:65535 sc-drug
     ```
 
-    
 4.  In the Docker container `scDrug`, pull the Docker image `cibersortx/fractions` used in treatment selection.
 
     ```
     /etc/init.d/docker start
     docker pull cibersortx/fractions
     ```
-    
+
     Note 1: Get `CONTAINER_ID` with command `docker ps -a` and start the container with `docker start -i CONTAINER_ID`.
     Note 2: If docker-in-docker cannot be operated on the user's computer, the user can pull and run the CIBERSORTx container outside the scDrug container as long as a shared folder is mounted on both containers for file sharing.
 
@@ -55,7 +51,6 @@ Note: Refer to [example](example) for a detail illustration of the usage for the
 Optionally, **Single-Cell Data Analysis** carried out batch correction, cell type annotation and Gene Set Enrichment Analysis (GSEA), and provided additional UMAPs showing batch effects and cell types (`umap_batch.png` and `umap_cell_type.png`), and the GSEA result `GSEA_results.csv`. For cell type annotation, we used [scMatch: a single-cell gene expression profile annotation tool using reference datasets](https://github.com/asrhou/scMatch).
 
 Furthermore, **Single-Cell Data Analysis** could take previously produced Anndata as input and applied sub-clustering on specified clusters.
-
 
 - Run `python3 single_cell_analysis.py -h` to show the help messages as follow for **Single-Cell Data Analysis**.
 
@@ -109,10 +104,9 @@ python3 single_cell_analysis.py --input INPUT --metadata METADATA --batch BATCH 
 python3 single_cell_analysis.py -f h5ad --input scanpyobj.h5ad --clusters CLUSTERS --auto-resolution --cpus 4
 ```
 
-
 ### Drug Response Prediction
 
-**Drug Response Prediction** examined  `scanpyobj.h5ad` generated in **Single-Cell Data Analysis**, reported clusterwise IC50 and cell death percentages to drugs in the GDSC database via [CaDRReS-Sc](https://github.com/CSB5/CaDRReS-SC) (a recommender system framework for *in silico* drug response prediction), or drug sensitivity AUC in the PRISM database from [DepMap Portal PRISM-19Q4] (https://doi.org/10.1038/s43018-019-0018-6). The output the prediction results are `IC50_prediction.csv` and `drug_kill_prediction.csv` while using parameter `--model GDSC`, and `AUC_prediction.csv` whlie using parameter `--model PRISM`.
+**Drug Response Prediction** examined `scanpyobj.h5ad` generated in **Single-Cell Data Analysis**, reported clusterwise IC50 and cell death percentages to drugs in the GDSC database via [CaDRReS-Sc](https://github.com/CSB5/CaDRReS-SC) (a recommender system framework for _in silico_ drug response prediction), or drug sensitivity AUC in the PRISM database from [DepMap Portal PRISM-19Q4] (https://doi.org/10.1038/s43018-019-0018-6). The output the prediction results are `IC50_prediction.csv` and `drug_kill_prediction.csv` while using parameter `--model GDSC`, and `AUC_prediction.csv` whlie using parameter `--model PRISM`.
 
 - Run `python3 drug_response_prediction.py -h` to show the help messages as follow for **Drug Response Prediction**.
 
@@ -140,14 +134,13 @@ optional arguments:
 python3 drug_response_prediction.py --input scanpyobj.h5ad
 ```
 
-
 ### Treatment Selection
 
 In **Treatment Selection**, we first **imputed cell fractions** of bulk GEPs from the LINCS L1000 database with single-cell GEP `GEP.txt` created in **Single-Cell Data Analysis** via Docker version of [CIBERSORTx Cell Fractions](https://cibersortx.stanford.edu), which enumerated the proportions of distinct cell subpopulations in tissue expression profiles. Then, we **selected treatment combinations** from the LINCS L1000 database with the CIBERSORTx result, and generated plots and a dataframe to show the drug effect.
 
 #### Impute Cell Fractions
 
-**Impute Cell Fractions** took the reference sample file `GEP.txt` as input to run CIBERSORTx Cell Fractions with bulk GEP of user specified or automatically determined cell type, and output CIBERSORTx result files to the output directory, including `CIBERSORTx_Adjusted.txt`. The cell type for bulk GEP involved A375 (malignant melanoma),  A549 (non-small cell lung carcinoma),  HCC515 (non-small cell lung adenocarcinoma),  HEPG2 (hepatocellular carcinoma), HT29 (colorectal adenocarcinoma),  MCF7 (breast adenocarcinoma),  PC3 (prostate adenocarcinoma),  YAPC (Pancreatic carcinoma).
+**Impute Cell Fractions** took the reference sample file `GEP.txt` as input to run CIBERSORTx Cell Fractions with bulk GEP of user specified or automatically determined cell type, and output CIBERSORTx result files to the output directory, including `CIBERSORTx_Adjusted.txt`. The cell type for bulk GEP involved A375 (malignant melanoma), A549 (non-small cell lung carcinoma), HCC515 (non-small cell lung adenocarcinoma), HEPG2 (hepatocellular carcinoma), HT29 (colorectal adenocarcinoma), MCF7 (breast adenocarcinoma), PC3 (prostate adenocarcinoma), YAPC (Pancreatic carcinoma).
 
 - Run `python3 CIBERSORTx_fractions.py -h` to show the help messages as follow for **Impute Cell Fractions**.
 
@@ -180,7 +173,7 @@ optional arguments:
 
 ```
 
--  **Impute Cell Fractions** via CIBERSORTx Cell Fractions with single-cell GEP `GEP.txt` and LINCS L1000 bulk GEP of automatically determined cell type.
+- **Impute Cell Fractions** via CIBERSORTx Cell Fractions with single-cell GEP `GEP.txt` and LINCS L1000 bulk GEP of automatically determined cell type.
 
 ```
 python3 CIBERSORTx_fractions.py --input GEP.txt --username USERNAME --token TOKEN
@@ -219,4 +212,3 @@ optional arguments:
 ```
 python3 treatment_selection.py --input CIBERSORTx_Adjusted.txt --celltype CELLTYPE --metadata METADATA
 ```
-
