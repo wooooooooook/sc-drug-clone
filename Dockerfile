@@ -18,7 +18,11 @@ RUN sed -i 's/\.ix/.loc/g' /opt/scMatch/scMatch.py
 RUN sed -i 's/loc\[commonRows, ].fillna(0\.0)/reindex(commonRows, axis="index", fill_value=0.0)/g' /opt/scMatch/scMatch.py
 
 # survival analysis
-RUN wget -q https://figshare.com/ndownloader/files/35612942 -O data/TCGA.zip
+RUN curl -L \
+     -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64)" \
+     -H "Accept: application/octet-stream" \
+     https://figshare.com/ndownloader/files/35612942 \
+     -o data/TCGA.zip
 RUN unzip data/TCGA.zip
 RUN rm data/TCGA.zip
 
