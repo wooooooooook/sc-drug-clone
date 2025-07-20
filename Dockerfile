@@ -39,8 +39,8 @@ RUN sed -i 's/import tensorflow as tf/import tensorflow.compat.v1 as tf\ntf.disa
 RUN sed -i 's/import tensorflow\.python\.util\.deprecation as deprecation/from tensorflow.python.util import deprecation/g' /opt/CaDRReS-Sc/cadrres_sc/model.py
 
 ## CIBERSORTx
-RUN apt-get update
-RUN apt-get install -y docker.io
+# RUN apt-get update
+# RUN apt-get install -y docker.io
 
 
 CMD [ "/bin/bash" ]
