@@ -1,4 +1,5 @@
-FROM tensorflow/tensorflow:2.9.1
+FROM tensorflow/tensorflow:2.9.1-jammy
+
 RUN apt-get update && apt-get install -y git unzip wget curl
 RUN pip3 install --upgrade pip cmake
 WORKDIR scDrug
@@ -39,8 +40,8 @@ RUN sed -i 's/import tensorflow as tf/import tensorflow.compat.v1 as tf\ntf.disa
 RUN sed -i 's/import tensorflow\.python\.util\.deprecation as deprecation/from tensorflow.python.util import deprecation/g' /opt/CaDRReS-Sc/cadrres_sc/model.py
 
 ## CIBERSORTx
-# RUN apt-get update
-# RUN apt-get install -y docker.io
+RUN apt-get update
+RUN apt-get install -y docker.io
 
 
 CMD [ "/bin/bash" ]
