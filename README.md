@@ -1,6 +1,6 @@
 # scDrug: From scRNA-seq to Drug Repositioning
 
-### This repository is a clone of the scDrug. 2025년 7월 21일 기준 최신 DockerEngine에서 실행이 가능하도록 Dockerfile 및 README.md를 수정했습니다.
+### This repository is a clone of scDrug. 2025년 7월 21일 기준 최신 DockerEngine에서 실행이 가능하도록 Dockerfile 및 README.md를 수정했습니다.
 
 The scDrug constructed a workflow for comprehensive analysis on single-cell RNA sequencing (scRNA-seq) data. It provided a powerful tool with various functions, from fundamental data analysis to drug response prediction, and treatment suggestions.
 
