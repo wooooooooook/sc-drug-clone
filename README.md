@@ -1,5 +1,7 @@
 # scDrug: From scRNA-seq to Drug Repositioning
 
+### scDrug 복제 버전입니다. 2025년 7월 21일 기준 최신 DockerEngine에서 실행이 가능하도록 Dockerfile 및 README.md를 수정했습니다.
+
 The scDrug constructed a workflow for comprehensive analysis on single-cell RNA sequencing (scRNA-seq) data. It provided a powerful tool with various functions, from fundamental data analysis to drug response prediction, and treatment suggestions.
 
 The scDrug went through three parts on raw scRNA-seq data investigation: **Single-Cell Data Analysis**, **Drug Response Prediction**, and **Treatment Selection**.
