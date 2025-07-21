@@ -17,7 +17,7 @@ The scDrug went through three parts on raw scRNA-seq data investigation: **Singl
 1.  Clone the repository to local directory, e.g., `./scDrug`.
 
     ```
-    git clone https://github.com/ailabstw/scDrug.git ./scDrug
+    git clone https://github.com/wooooooooook/scDrug-clone.git ./scDrug
     ```
 
 2.  Build the Docker image tagged `sc-drug`.
